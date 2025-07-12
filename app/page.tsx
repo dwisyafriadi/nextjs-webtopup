@@ -1,11 +1,14 @@
 "use client";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth";
+
 export default function HomePage() {
   const router = useRouter();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
+
   useEffect(() => {
     if (!isLoading) {
       if (isAuthenticated) {
@@ -15,6 +18,7 @@ export default function HomePage() {
       }
     }
   }, [isAuthenticated, isLoading, router]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
       <div className="text-center">

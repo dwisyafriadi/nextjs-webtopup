@@ -1,8 +1,6 @@
-// app/layout.tsx
-"use client";
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/components/providers/auth-provider";
 
@@ -26,33 +24,12 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
+          {" "}
+          {/* ini tetap client karena dia import komponen client */}
           {children}
           <Toaster />
         </AuthProvider>
       </body>
     </html>
   );
-}
-
-// app/page.tsx
-import { redirect } from "next/navigation";
-
-export default function HomePage() {
-  redirect("/dashboard");
-}
-
-// components/providers/auth-provider.tsx
-("use client");
-
-import { useEffect } from "react";
-import { useAuthStore } from "@/lib/store/auth";
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const checkAuth = useAuthStore((state) => state.checkAuth);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  return <>{children}</>;
 }
