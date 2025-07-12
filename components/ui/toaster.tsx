@@ -1,18 +1,24 @@
 // components/ui/toaster.tsx
+"use client";
+
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+
 interface Toast {
   id: string;
   title?: string;
   description?: string;
   variant?: "default" | "success" | "error" | "warning";
 }
+
 let toastCount = 0;
 const toasts: Toast[] = [];
 const listeners: Array<(toasts: Toast[]) => void> = [];
+
 function notifyListeners() {
   listeners.forEach((listener) => listener([...toasts]));
 }
+
 export function toast({
   title,
   description,
@@ -20,8 +26,10 @@ export function toast({
 }: Omit<Toast, "id">) {
   const id = String(toastCount++);
   const toast: Toast = { id, title, description, variant };
+
   toasts.push(toast);
   notifyListeners();
+
   setTimeout(() => {
     const index = toasts.findIndex((t) => t.id === id);
     if (index > -1) {
@@ -30,8 +38,10 @@ export function toast({
     }
   }, 4000);
 }
+
 export function Toaster() {
   const [toastList, setToastList] = useState<Toast[]>([]);
+
   useEffect(() => {
     listeners.push(setToastList);
     return () => {
@@ -41,6 +51,7 @@ export function Toaster() {
       }
     };
   }, []);
+
   const removeToast = (id: string) => {
     const index = toasts.findIndex((t) => t.id === id);
     if (index > -1) {
@@ -48,6 +59,7 @@ export function Toaster() {
       notifyListeners();
     }
   };
+
   const getVariantStyles = (variant: Toast["variant"]) => {
     switch (variant) {
       case "success":
@@ -60,6 +72,7 @@ export function Toaster() {
         return "bg-gray-800 text-white";
     }
   };
+
   return (
     <div className="fixed bottom-0 right-0 z-50 m-4 flex flex-col gap-2 sm:bottom-auto sm:top-0">
       {toastList.map((toast) => (

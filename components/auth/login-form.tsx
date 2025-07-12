@@ -1,25 +1,33 @@
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 import { authApi } from "@/lib/api/auth";
 import { useAuthStore } from "@/lib/store/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toaster";
 import { Eye, EyeOff } from "lucide-react";
+
 const loginSchema = z.object({
   email: z.string().email("Email tidak valid"),
   password: z.string().min(6, "Password minimal 6 karakter"),
   rememberMe: z.boolean().optional(),
 });
+
 type LoginFormData = z.infer<typeof loginSchema>;
+
 export function LoginForm() {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -27,6 +35,7 @@ export function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
@@ -48,6 +57,7 @@ export function LoginForm() {
       setIsLoading(false);
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
@@ -62,6 +72,7 @@ export function LoginForm() {
           error={errors.email?.message}
         />
       </div>
+
       <div className="space-y-2">
         <label htmlFor="password" className="text-sm font-medium">
           Password
@@ -83,6 +94,7 @@ export function LoginForm() {
           </button>
         </div>
       </div>
+
       <div className="flex items-center justify-between">
         <label className="flex items-center space-x-2 text-sm">
           <input
@@ -99,6 +111,7 @@ export function LoginForm() {
           Lupa password?
         </Link>
       </div>
+
       <Button type="submit" className="w-full" isLoading={isLoading}>
         Masuk
       </Button>

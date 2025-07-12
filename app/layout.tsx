@@ -1,4 +1,5 @@
 // app/layout.tsx
+"use client";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -31,4 +32,27 @@ export default function RootLayout({
       </body>
     </html>
   );
+}
+
+// app/page.tsx
+import { redirect } from "next/navigation";
+
+export default function HomePage() {
+  redirect("/dashboard");
+}
+
+// components/providers/auth-provider.tsx
+("use client");
+
+import { useEffect } from "react";
+import { useAuthStore } from "@/lib/store/auth";
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  return <>{children}</>;
 }
